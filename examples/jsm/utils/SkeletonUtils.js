@@ -566,7 +566,69 @@ function clone( source ) {
 
 }
 
+function copyObj( sourceMesh, sourceMatrix ) {
+	const sourceMatrixLookup = new Map();
+	const sourceMeshLookup = new Map();
+	const cloneLookup = new Map();
+	const clone = sourceMesh.clone();
+	parallelTraverseMulti( sourceMesh, sourceMatrix, clone, function ( sourceMeshNode, sourceMatrixNode, clonedNode ) {
+		// console.log("clonedNode:");
+		// console.log(clonedNode);
+		// console.log("sourceNode:");
+		// console.log(sourceNode);
+		sourceMeshLookup.set( clonedNode, sourceMeshNode );
+		sourceMatrixLookup.set( clonedNode, sourceMatrixNode );
+		cloneLookup.set( sourceMeshNode, clonedNode );
+	} );
+	console.log("sourceMeshLookup:");
+	console.log(sourceMeshLookup);
+	console.log("sourceMatrixLookup:");
+	console.log(sourceMatrixLookup);
+	console.log("cloneLookup:");
+	console.log(cloneLookup);
+	// clone.traverse( function ( node ) {
+	// 	if ( ! node.isSkinnedMesh ) return;
+	// 	const clonedMesh = node;
+	// 	const sourceMesh = sourceMeshLookup.get( node );
+	// 	const sourceMatrix = sourceMatrixLookup.get( node );
+	// 	const sourceBones = sourceMesh.skeleton.bones;
+	// 	clonedMesh.skeleton = sourceMesh.skeleton.clone();
+	// 	clonedMesh.bindMatrix.copy( sourceMatrix.bindMatrix );
+	// 	clonedMesh.skeleton.bones = sourceBones.map( function ( bone ) {
+	// 		return cloneLookup.get( bone );
+	// 	} );
+	// 	clonedMesh.bind( clonedMesh.skeleton, clonedMesh.bindMatrix );
+	// } );
+	return clone;
+}
 
+
+
+function parallelTraverseMulti ( a, b, c, callback ) {
+	console.log("parallelTraverseMulti.in:");
+	console.log("a.name:" + a.name);
+	console.log("b.name:" + b.name);
+	callback( a, b, c );
+	let j = 0;
+	for ( let i = 0; i < a.children.length; i ++ ) {
+		// console.log("c:");
+		// console.log(c);
+		if (b != null && c != null && b.children != null && c.children != null) {
+			if (a.children[i].isBone && b.children[j].isBone) {
+				console.log("a:");
+				console.log(a);
+				console.log("b:");
+				console.log(b);
+				parallelTraverseMulti(a.children[i], b.children[j], c.children[i], callback);
+				break;
+			}
+			if (a.children[i].isBone) {
+				j++;
+			}
+		}
+	}
+
+}
 
 
 function parallelTraverse( a, b, callback ) {
@@ -593,4 +655,5 @@ export {
 	findBoneTrackData,
 	getEqualsBonesNames,
 	clone,
+	copyObj
 };

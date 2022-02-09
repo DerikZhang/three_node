@@ -11,11 +11,13 @@
             /* 隐藏body窗口区域滚动条 */
         }
     </style>
+
+    <script src="editor/js/libs/signals.min.js"></script>
+    <!-- 读取fbx，迁移骨架 -->
+    <script type="module" src="js/migrateFbx.js"></script>
+
     <!-- 克隆fbx模型并解析动画 -->
-    <script type="module" src="js/cloneFbx.js"></script>
-
-
-
+<!--    <script type="module" src="js/cloneFbx.js"></script>-->
     <!-- 读取fbx模型并解析动画 -->
 <!--    <script type="module" src="js/loadFbx.js"></script>-->
     <!-- 打印材质、场景、模型信息 -->

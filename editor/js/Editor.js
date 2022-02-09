@@ -551,6 +551,8 @@ Editor.prototype = {
 
 		this.config.setKey( 'selected', uuid );
 		this.signals.objectSelected.dispatch( object );
+		console.log("selected object:");
+		console.log(object);
 
 	},
 
